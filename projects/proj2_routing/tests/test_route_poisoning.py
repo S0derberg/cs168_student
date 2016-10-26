@@ -53,7 +53,7 @@ def launch():
         api.userlog.debug(
             'Waiting for poison to propagate, but not long enough ' +
             'for routes to time out')
-        yield 10
+        yield 3
 
         api.userlog.debug(
             'Sending ping from h1 to h2 - it should be dropped at s1')

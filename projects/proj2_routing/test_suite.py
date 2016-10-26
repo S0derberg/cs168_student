@@ -9,7 +9,7 @@ below.
 
 from __future__ import print_function
 
-import fcntl
+#import fcntl
 import os
 import select
 import subprocess
@@ -32,6 +32,16 @@ def main():
         extra_args=['--poison-mode'])
 
     # Add your own tests here.
+    t.test('learning_switch', 'tests.test_super_learning')
+    t.test('learning_switch', 'tests.test_learning_disconnect')
+    t.test('learning_switch', 'tests.test_learning_complex')
+    t.test('dv_router', 'tests.test_fun')
+    t.test('dv_router', 'tests.test_diamond_top')
+    t.test('dv_router', 'tests.test_basics_intensely')
+    t.test('dv_router', 'tests.test_link_weights_multi_router_host')
+    t.test('dv_router', 'tests.test_simple_split_horizon')
+    t.test('dv_router', 'tests.test_poison_reverse', extra_args=['--poison-mode'])
+    t.test('dv_router', 'tests.test_low_cost_late')
 
     t.finish()
 
