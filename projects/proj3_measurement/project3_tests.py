@@ -49,7 +49,7 @@ def rtt_part_b_check(text):
 
 def path_check(path):
     if type(path) != list:
-        msg = "expected list type for 'path' value, instead got type " + str(type(run_data["path"]))
+        msg = "expected list type for 'path' value, instead got type " + str(type(path))
         raise Exception(msg)
                 
     for hop in path:
@@ -64,8 +64,8 @@ def path_check(path):
             if "ip" not in server:
                 msg = "'ip' not found"
                 raise Exception(msg)
-            if "asn" not in server:
-                msg = "'asn' not found"
+            if "ASN" not in server:
+                msg = "'ASN' not found"
                 raise Exception(msg)
             
 def tr_single_run_check(output, sites):

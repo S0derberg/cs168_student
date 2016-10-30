@@ -10,7 +10,7 @@ In this project, you'll use three command-line tools to analyze the behavior of 
 
 ##### What should I submit?
 
-- Submit your code and data using `ok`.  You should submit the following, described in more detail below:
+- Submit your Python code and JSON data using `ok`. Your code should be Python 2 compatible. In particular, you should submit the following files (described in more detail in later sections):
 
   Code:
     - `rtts.py`
@@ -103,9 +103,6 @@ a) Ping each Alexa top 100 website 10 times. You should store `rtts.py`'s output
 
 b) Next, we want to take a look at a few websites’ ping behavior in more detail. The websites are: google.com, todayhumor.co.kr, zanvarsity.ac.tz, taobao.com. Ping each website 500 times. Again, generate two json files: `rtt_b_raw.json` and `rtt_b_agg.json`.
 
-Important note: some `ping` implementations seem to exhibit the following behavior -- a timeout message is not printed until the program starts sending the *next* packet.
-Therefore, if a website does not respond to `ping` at all, you will only get 9 output messages when you ping the website 10 times.
-To make sure that you don't miss a timeout message, please try to run the experiments with *one more ping packet* than needed (e.g. for part a, ping each website 11 times instead of 10 times), then parse only the necessary output (e.g. for part a, parse the first 10 RTTs if you get 11 RTTs back).
 
 **Short answer questions**
 
@@ -119,6 +116,15 @@ To make sure that you don't miss a timeout message, please try to run the experi
    - Compare the median ping time to the speed of light time.  What’s the multiplier for each server (calculate as [ping time / speed of light time])?
    - Using one sentence each, list two reasons why the ping time is not equal to the speed of light time.  Plausible but unlikely answers (e.g., “a bear chewed through the wire, causing a long delay) will not receive full credit.
    - [Optional] Repeat #3 for any website you might be curious about. How much route inflation do you observe? This [tool](http://pythonhosted.org/python-geoip/) might be useful in identifying a website’s physical location.
+
+**Important notes**
+
+- Some `ping` implementations seem to exhibit the following behavior -- a timeout message is not printed until the program starts sending the *next* packet.
+Therefore, if a website does not respond to `ping` at all, you will only get 9 output messages when you ping the website 10 times.
+To make sure that you don't miss a timeout message, please try to run the experiments with *one more ping packet* than needed (e.g. for part a, ping each website 11 times instead of 10 times), then parse only the necessary output (e.g. for part a, parse the first 10 RTTs if you get 11 RTTs back).
+- Some Windows machines do not seem to be able to measure RTTs accurately (they do not go past the millisecond precision). Please try to use a machine that does measure accurately (some of the instructional machines, like hive[x].cs.berkeley.edu, should support accurate ping measurements).
+- You don't have to worry about rounding your RTT numbers -- just use the numbers that ping outputs, and convert into floats.
+
 
 ##### Part 1 hints
 - Be careful with parsing pings that fail because the output data format will be different.
@@ -322,6 +328,13 @@ The easiest way to call a shell command is to use the `subprocess` library's `ch
     ls_output = subprocess.check_output("ls", shell=True)
 
 
+##### How do I parse the shell command output in Python?
+
+There are many approaches for parsing commandline output. One way is to use the Python [regex library](https://docs.python.org/2/library/re.html) to parse the outputs. Regular expression is a powerful tool for pattern matching expected outputs.
+Another way is to split each line into items using `line.split()` (by default, python's split function splits on whitespace).
+This will turn the text output into a more structured format that allows for easier parsing.
+
+You shouldn't use another library that specifically parses ping/traceroute/dig outputs (e.g. this [library](https://pypi.python.org/pypi/pingparsing/0.2.5) is not allowed).
     
 ##### What is a CDF and what should my CDF look like?
 
@@ -341,11 +354,11 @@ The CDFs you make should be visually similar to the plot above (see the followin
 We recommend using matplotlib to generate plots.  Suppose you have list x_values that contains all of the x values of points that you’d like to plot, and a second corresponding list (with the same length) y_values:
 
      import matplotlib.pyplot as plot
-     plot.plot(y_values, x_values, label=”My data”)
+     plot.plot(x_values, y_values, label=”My data”)
      plot.legend() # This shows the legend on the plot.
      plot.grid() # Show grid lines, which makes the plot easier to read.
      plot.xlabel("x axis!") # Label the x-axis.
-     plot.xlabel("y axis!") # Label the y-axis.
+     plot.ylabel("y axis!") # Label the y-axis.
      plot.show()
 
 ##### How can I automatically save the result of my plot to a file?
@@ -354,4 +367,3 @@ We recommend using matplotlib to generate plots.  Suppose you have list x_values
      my_filepath = “dns_plot.pdf”
      with backendpdf.PdfPages(my_filepath) as pdf:
           pdf.savefig()
-
