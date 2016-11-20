@@ -2,6 +2,7 @@
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{graphicx}
+\usepackage{pdfpages}
 
 \setlength{\oddsidemargin}{0pt}
 \setlength{\evensidemargin}{0pt}
@@ -26,11 +27,13 @@
 \begin{itemize}
 \item What percentage of the websites do not respond to pings at all? What percentage have at least one failed ping?
 
-FIXME: ANSWER HERE
+Of the 100 websites, 20\% did not respond to pings at all.
+
+30\% had at least one packet dropped. This will include the websites dropping all pings, plus a few more because dropping just happens sometimes.
 
 \item Using the plot functions and \texttt{rtt\_a\_agg.json}, please plot a CDF of the median RTT of the websites that respond to ping.
 
-FIXME: ANSWER HERE
+\includegraphics[scale=0.6]{{a_agg.PNG}}
 
 \end{itemize}
 
@@ -38,13 +41,20 @@ FIXME: ANSWER HERE
 
 \begin{itemize}
 
-\item What are the median RTT and maximum RTT for each website? What loss rate do you observe?
+\item What are the median RTT and maximum RTT for each website? What loss rate do you observe? \\
 
-FIXME: ANSWER HERE
+google.com: Median RTT of 4.76 ms, Maximum RTT of 74.751 ms, 0.2\% loss rate \\ 
+
+todayhumor.co.kr: Median RTT of 87.509 ms, Maximum RTT of 533.186 ms, 0\% loss rate \\
+
+taobao.com: Median RTT of 335.631 ms, Maximum RTT of 660.745 ms, 68.8\% loss rate \\
+
+zanvarsity.ac.tz: Median RTT 311.511 ms, Maximum RTT of 490.459 ms, 1.2\% loss rate \\
+
 
 \item Using the plot functions to and \texttt{rtt\_b\_raw.json}, please plot a CDF of the RTT for each website. You can plot the four CDFs on the same graph. Be sure to include a legend so we know which CDF corresponds to which of the four websites.
 
-FIXME: ANSWER HERE
+\includegraphics[scale=0.6]{{b_ping.PNG}}
 
 \end{itemize}
 
@@ -52,17 +62,16 @@ FIXME: ANSWER HERE
 
 \begin{itemize}
 
-\item Compare the median ping time to the speed of light time. s the multiplier for each server (calculate as [ping time / speed of light time])?
+\item Compare the median ping time to the speed of light time. What's the multiplier for each server (calculate as [ping time / speed of light time])?
 
-FIXME: ANSWER HERE
+google multiplier = $(4.76 ms) / (0.189121465 ms) = 25.169$ \\
 
-\item Using one sentence each, list two reasons why the ping time is not equal to the speed of light time. Plausible but unlikely answers (e.a bear chewed through the wire, causing a long delay) will not receive full credit.
+zanvarsity multiplier = $(311.511 ms) / (53.4323165 ms) = 5.83$ \\
 
-FIXME: ANSWER HERE
+\item Using one sentence each, list two reasons why the ping time is not equal to the speed of light time. Plausible but unlikely answers (e.g. bear chewed through the wire, causing a long delay) will not receive full credit.
 
-\item \emph{[Optional]} Repeat \#3 for any website you might be curious about. How much route inflation do you observe? 
+One reason why ping times don't match speed of light times is that the path of the ping is not always the direct path to the final destination, the path could be closer to that of a zig zag.  Another reason why ping times will never match the speed of light is that the wire materials that the packets travel through are not a vacuum, and thus have some resistance.
 
-FIXME: ANSWER HERE
 
 \end{itemize}
 \end{enumerate}
@@ -79,27 +88,51 @@ FIXME: ANSWER HERE
 
 \item Which ASes are Berkeley directly connected to?
 
-FIXME: ANSWER HERE
+According to our data from experiment A, Berkeley is directly connected to AS 2152.  (If we were to include experiment B data, it is also seen to be connected to AS 2153).
 
 \item Which traceroute traverses the most number of ASes? How about the least number of ASes?
 
-FIXME: ANSWER HERE
+The traceroute to www.vutbr.cz traverses the most ASes; it goes through 6 of them.  The traceroute to www.berkeley.edu traverses the fewest ASes; it's just 1, since we are in Berkeley.
 
 \item Which websites are load-balanced?
 
-FIXME: ANSWER HERE
+The route to google.com appears to be load-balanced because there are multiple hops on the way that have multiple routers handling the packets. \\
+
+The route to facebook.com appears to be load-balanced in the same way that google.com is, and also in that there a couple different destination IP addresses. \\
+
+The route to www.berkeley.edu is also load-balanced, as it also has multiple routers at a single hop. \\
+
+In fact, the rest of the websites (allspice.lcs.mit.edu, todayhumor.co.kr, www.city.kobe.lg.jp, www.vutbr.cz, zanvarsity.ac.tz) appear to have some degree of load-balancing to them.  There are a couple hops in the Berkeley AS (25) that always have multiple routers.  This will mean that any path coming out of Berkeley will be load-balanced, at least on our end of the path. \\
+
+Most of the paths also have a hop somewhere down the line that has several routers. \\
+
+Only a few others (besides facebook.com) have different final IP addresses: todayhumor.co.kr and zanvarsity.ac.tz.
 
 \item Are the observed routes stable over multiple runs? For each website, how many unique routes did you observe?
 
-FIXME: ANSWER HERE
+The observed routes over multiple runs are relatively stable.  Since so many paths are load-balanced, there are several key hops in the paths that distribute packets over different routers.  This will result in a few unique routes, but the only differences between these "unique" routes are which routers happened to be used at certain hops.  So different combinations of hop load-balancing results in varying routes.
+
+google.com: 3 unique routes\\
+
+facebook.com: 5 unique routes\\
+
+www.berkeley.edu: 1 unique route\\
+
+allspice.lcs.mit.edu: 2 unique routes (only difference was that one hop sometimes responded, sometimes didn't, so it could actually all be 1 unique route)\\
+
+todayhumor.co.kr: 5 unique routes\\
+
+www.city.kobe.lg.jp: 5 unique routes\\
+
+www.vutbr.cz: 1 unique route\\
+
+zanvarsity.ac.tz: 5 unique routes\\
+
 
 \item Using one sentence, please explain one advantage of having stable routes.
 
 FIXME: ANSWER HERE
 
-\item \emph{[Optional]} Make a graph of the ASes and their connectivity.
-
-FIXME: ANSWER HERE
 
 \end{itemize}
 
@@ -109,15 +142,22 @@ FIXME: ANSWER HERE
 
 \item How many hops do you observe in each route when you run traceroute from your computer? How many hops do you observe in the reverse direction?
 
-FIXME: ANSWER HERE
+tpr-route-server.saix.net: 15 hops to it, 14 hops from it to me\\
+route-server.ip-plus.net: 16 hops to it, 13 hops from it to me\\
+route-views.oregon-ix.net: 10 hops to it, 10 hops from it to me\\
+route-server.eastern.allstream.com: 30 hops to it (but from 14-30 there were no responses), 19 hops from it to me\\
+
+Keep in mind that I used my next-hop router for the reverse direction traceroutes, so that's one fewer hop in that direction. \\
 
 \item Are these routes symmetric? How many are symmetric and how many are not?
 
-FIXME: ANSWER HERE
+But even when I take into account the difference in tracing from my computer (the hive computer, really) or to hive's next-hop router, the paths are clearly not symmetric.  None of them appear to be symmetric.  The paths are similar, but there are different routers in geographically close regions to handle the packets. 
 
 \item What might cause asymmetric routes? List one or two reasons.
 
-FIXME: ANSWER HERE
+One reason for this asymmetry is load balancing.  Since different routers at a single hop are handling varying numbers of packets, there will be an inherent asymmetry when running this experiment.  When a traceroute is run in one direction, the routers will be balancing the load one way, and by the time I run the reverse direction, the routers are balancing the load in another way. \\
+
+Another possible reason to have asymmetric routes is to have a better flow of communication between two hosts.  In a symmetric path, the packets would be going back and forth on the same path.  It may improve performance for extended communications to have packets go on one path \textit{to} a destination and another path \textit{from} that destination. \\
 
 \end{itemize}
 \end{enumerate}
@@ -129,28 +169,32 @@ FIXME: ANSWER HERE
 
 \item What's the average root TTL in the 5 iterations of the top Alexa websites? Average TLD TTL? Average other name server TTL? Average terminating entry TTL?
 
-FIXME: ANSWER HERE
+Average root TTL: 466411.834 seconds \\
+Average TLD TTL: 172800 seconds \\
+Average Other Name Server TTL: 150293 seconds \\
+Average terminating entry TTL: 28818.445 seconds \\
+
 
 \item Plot a CDF of your 5 iterations from the Alexa top 100 websites using your \texttt{generate\_time\_cdfs} function (this should have two lines, as described above).
 
-FIXME: ANSWER HERE
+\includegraphics[scale=0.6]{{dns_times.PNG}}
 
 \item Run \texttt{run\_dig} twice at least 1 hour apart. How many answers change within the first trial? How many names gave different answers at some point in the two trials (i.e., what values does {count\_different\_dns\_responses} return?)?
 
-FIXME: ANSWER HERE
+We found that 10 names resulted in different server set answers within the first trial, and 35 names had differing results across both trials.
 
 \item Run \texttt{run\_dig} using the name of a server in a different country. You can find public DNS servers in other countries here. 
 Run \texttt{count\_different\_dns\_responses} with your original trace and the one from the new country. What does it return?
 
-FIXME: ANSWER HERE
+We again found that 10 names resulted in different server set answers within the first trial. Then we found that 84 names had different answers when using a foreign country's server.  Since the second trial uses a specific server, it always resolves to one 'A' record address.  Being a lone resolution, this 'A' record is different than the non-server resolutions because those usually had several final resolutions.
 
 \item Take a look at a few of the names that returned different answers when you queried a different name server in the previous part. Use ping to measure the round trip time to the different IP addresses returned. What's the most likely reason that the different DNS server returned a different IP address? Answer in one sentence (you do not need to provide your ping output).
 
-FIXME: ANSWER HERE
+The DNS server is likely returning an IP address of a website's proxy server in that foreign country, while without using a specific foreign DNS server the dig results in a relatively local IP address; our ping response was much slower when going to the foreign country's IP addresses for the websites.
 
 \item We asked you to use the \texttt{+trace} argument when running \texttt{dig}, which causes your local machine to resolve all requests iteratively starting from the root DNS server. How would the DNS resolution times have been different, and why if you hadn't used the \texttt{+trace} argument? Answer in 1 sentence.
 
-FIXME: ANSWER HERE
+The resolution times would have been faster if we hadn't used the \texttt{+trace} argument because our request would likely reach a DNS server that has the final result cached, so the request wouldn't need to be broken down into each component and go to each level of the DNS hierarchy. 
 
 \end{enumerate}
 

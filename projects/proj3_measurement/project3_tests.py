@@ -26,6 +26,7 @@ def rtt_part_a_check(text):
     top_100_sites = [x for x in open("./alexa_top_100", 'r').read().split('\n') if x != '']
     for h in top_100_sites:
         if h not in output:
+            print(h)
             raise Exception(h + " is not in the data")
 
     print "RTT part a PASS"
