@@ -28,13 +28,13 @@ In this project, you'll use three command-line tools to analyze the behavior of 
     - `dns_output_2.json`
     - `dns_output_other_server.json`
 
-- In addition to submitting your code to `ok`, you should submit a set of short answers and graphs to gradescope.  The specific short answers and graphs you should generate are listed in the sections that follow.  We will update the link to submit this shortly.  This must be submitted as a PDF; you can create the PDF using whatever tool is most convenient for you.
+- In addition to submitting your code to `ok`, you should submit a set of short answers and graphs to Gradescope.  The specific short answers and graphs you should generate are listed in the sections that follow.  We will update the link to submit this shortly.  This must be submitted as a PDF; you can create the PDF using whatever tool is most convenient for you.
 
 ##### Provided files
 
 We have provided the following files for your use:
 
-- `alexa_top_100`: The top 100 most popular websites.  This is the real top 100 alexa websites; we have not censored this. As a result, use caution before visiting any of the websites.
+- `alexa_top_100`: The top 100 most popular websites.  This is the real top 100 Alexa websites; we have not censored this. As a result, use caution before visiting any of the websites.
 - `project3_tests.py`: A set of tests for you to run on your code. This file mostly tests json data formats, so feel free to write your own correctness tests.
 - The `examples` directory contains example output, described in more detail in the sections that follow.
 
@@ -111,7 +111,7 @@ b) Next, we want to take a look at a few websites’ ping behavior in more detai
    - Using the plot functions and `rtt_a_agg.json`, please plot a CDF of the *median* RTT of the websites that respond to ping.
 2. Questions on experiment b:
    - What are the median RTT and maximum RTT for each website? What loss rate do you observe?
-   - Using the plot functions to and `rtt_b_raw.json`, please plot a CDF of the RTT for *each* website. You can plot the four CDFs on the same graph. Be sure to include a legend so we know which CDF corresponds to which of the four websites.
+   - Using the plot functions and `rtt_b_raw.json`, please plot a CDF of the RTT for *each* website. You can plot the four CDFs on the same graph. Be sure to include a legend so we know which CDF corresponds to which of the four websites.
 3. In this question, you will analyze the ping times to two websites and compare the results to the expected speed-of-light times. The websites are google.com (located in Mountain View, CA, USA) and zanvarsity.ac.tz (located in Zanzibar, Tanzania). You can use your ping data from experiment b. The distance from Berkeley to Mountain view is 35.23 miles, and the distance from Berkeley to Zanzibar is 9,953.50 miles.
    - Compare the median ping time to the speed of light time.  What’s the multiplier for each server (calculate as [ping time / speed of light time])?
    - Using one sentence each, list two reasons why the ping time is not equal to the speed of light time.  Plausible but unlikely answers (e.g., “a bear chewed through the wire, causing a long delay) will not receive full credit.
@@ -143,7 +143,7 @@ The file should also be able to parse the shell traceroute command output direct
 The script should contain two functions:
 
 - `run_traceroute(hostnames, num_packets, output_filename)`: used to run the traceroute command on a list of hostnames. Outputs the traceroute command's results.
-  * `hostnames`: a  filename containing a list of hostnames for traceroute
+  * `hostnames`: a list of hostnames for traceroute
   * `num_packets`: how many packets to send to each hop
   * `output_filename`: where to save the traceroute command's results 
 - `parse_traceroute(raw_traceroute_filename, output_filename)`: this function should be able to take in outputs from a traceroute run (either from `traceroute()` or from a separate run) and write out json data.
@@ -171,31 +171,33 @@ Your script should produce json output in the following format:
 }
 ```
 
-Each run has a unix timestamp (you can use the`time` module in python), and it should be a string. The timestamp indicates when a specific run is started. Each hostname should also be formatted as a string. The value corresponding to each hostname is a list of routers encountered on the path. The first item in the list corresponds to the first hop, second item is the second hop, etc. Each hop is also a list (traceroute may encounter multiple routers within the same hop!). Finally, each router should have three fields: name, IP, and AS number. Everything should be string formatted, including the AS number. Unfortunately, not every router will respond to traceroute. If this is the case, simply output “None” for each field.
+Each run has a Unix timestamp (you can use the`time` module in python), and it should be a string. The timestamp indicates when a specific run is started. Each hostname should also be formatted as a string. The value corresponding to each hostname is a list of routers encountered on the path. The first item in the list corresponds to the first hop, second item is the second hop, etc. Each hop is also a list (traceroute may encounter multiple routers within the same hop!). Finally, each router should have three fields: name, IP, and AS number. Everything should be string formatted, including the AS number. If you see AS number of 0 or output such as [*], you should put "None" for the AS number. Unfortunately, not every router will respond to traceroute. If this is the case, simply output “None” for each field (e.g. `{"name": "None", "ip": "None", "ASN": "None"}`).
 
 For example outputs (both raw text output and json output), please take a look at `traceroute_sample.txt` and `traceroute_sample.json`.
 The text file contains text output from the traceroute command, and the json file contains the corresponding parsed json output.
 
+Note: Sometimes you will see a particular router repeated *multiple times within the same hop*. Please de-duplicate these routers (i.e. only count the unique routers) for each hop based on their IP.
+
 **Experiments**
 
-a) For part a, you will look at the routing behvaior to the following websites: google.com, facebook.com, www.berkeley.edu, allspice.lcs.mit.edu, todayhumor.co.kr, www.city.kobe.lg.jp, www.vutbr.cz, zanvarsity.ac.tz. For this experiment, please try to run traceroute from campus. You should run `traceroute.py` 5 times (with 5 packets each time), and each consecutive run should be at least 1 hour apart.
+a) For part a, you will look at the routing behavior to the following websites: google.com, facebook.com, www.berkeley.edu, allspice.lcs.mit.edu, todayhumor.co.kr, www.city.kobe.lg.jp, www.vutbr.cz, zanvarsity.ac.tz. For this experiment, please try to run traceroute from campus. You should run `traceroute.py` 5 times (with 5 packets each time), and each consecutive run should be at least 1 hour apart.
 You should generate a json file named `tr_a.json`.
 This file should be 5 lines long, where *each line* is a single run of `traceroute.py` on the above websites. You should be able to generate this file by appending output from your script to `tr_a.json`.
 
-b) There are many [public route servers](http://www.traceroute.org/#Route%20Servers) hosted in different regions that are useful for measuring internet routing state. We will use several of these servers to observe *route symmetry*. For this question, please use the folloawing list of public servers: tpr-route-server.saix.net, route-server.ip-plus.net, route-views.oregon-ix.net, route-server.eastern.allstream.com.
+b) There are many [public route servers](http://www.traceroute.org/#Route%20Servers) hosted in different regions that are useful for measuring internet routing state. We will use several of these servers to observe *route symmetry*. For this question, please choose FOUR of these five public route servers: tpr-route-server.saix.net, route-server.ip-plus.net, route-views.oregon-ix.net, route-server.eastern.allstream.com, route-views.on.bb.telus.com.
 
 - Run traceroute from your computer to the public route servers. 
-- Run traceroute from the public servers to your computer. *Note: if your computer does not have a public IP address, try to run traceroute to its first hop router*
+- Run traceroute from the public servers to your computer. *Note: if your computer does not have a public IP address, try to run traceroute to its first hop router. This means you should look at your forward traceroute first, then find the closest router to you that still has a public IP. Then simply traceroute to that instead.*
   * You can log into these servers directly using telnet (e.g. `telnet tpr-route-server.saix.net`). Note that some of them may require you to use a username/password.
-- You should produce a json file named `tr_b.json`. This file should be 2 lines long. The first line should be the json data from the run from your computer to the public route servers, and the second line should be the json data from traceroute run in the reverse direction.
+- You should produce a json file named `tr_b.json`. This file should be 2 lines long. The first line should be the json data from the run from your computer to the public route servers, and the second line should be the json data from traceroute run in the reverse direction. For the JSON file, you should key by the public route server in both directions (i.e. the key should be the destination hostname for the forward run, and the source hostname for the reverse run).
 
 **Short answer questions**
 
 1. Answer the following questions using the results obtained from experiment a.
    * Which ASes are Berkeley directly connected to?
    * Which traceroute traverses the most number of ASes? How about the least number of ASes?
-   * Which websites are load-balanced?
-   * Are the observed routes stable over multiple runs?  For each website, how many unique routes did you observe?
+   * Which websites' routes are load-balanced?
+   * Are the observed routes stable over multiple runs? For each website, how many unique routes did you observe?
    * Using one sentence, please explain one advantage of having stable routes.
    * [Optional] Make a graph of the ASes and their connectivity.
 
@@ -240,7 +242,7 @@ where `1.2.3.4` is the DNS server's address.
 `run_dig` should generate json output with a list of json dictionaries each representing a single call to “dig”, and save the output to `output_filename`.  The representation of each call to “dig” should be structured as follows:
 
 - “Name”:  name being resolved
-- "Success": whether the dig call was successful (if this is false, there should be no other fields in the json output)
+- "Success": whether the dig call was successful (if this is false, the only other field in the json output should be "Name"; there shouldn't be any queries)
 - “Queries”: list of all of the queries made for a single dig call.  The format of each query is:
   - “Time”: integer representing the time taken to complete the query
   - “Answers”: a list of answers for the query.  The format of each answer is:
@@ -259,7 +261,7 @@ We’ve provided each of these key names in `utils.py`, and we’ve also provide
     - What’s the average TTL for any other name servers? (e.g., for google.com, this includes the google.com name server).
     - What’s the average TTL for the terminating CNAME or A entry?
 
-  In other words, it should return `[average_root_ttl, average_TLD_ttl, average_other_ttl, average_terminating_ttl]`.  All times should be in seconds.
+  In other words, it should return `[average_root_ttl, average_TLD_ttl, average_other_ttl, average_terminating_ttl]`.  All times should be in seconds, and these averages should be over all DNS queries in the given filename (not just the entries for a particular host).
 
   One thing that's tricky here is how to deal with queries that return multiple answers.  For example, suppose your json output had queries for just two sites.  For the sake of example, let's look at just the terminating entries for these sites:
   
@@ -277,12 +279,16 @@ We’ve provided each of these key names in `utils.py`, and we’ve also provide
 - `get_average_times(filename)`: This function should accept the name of a json file with output as specified above as input.  It should return a 2-item list that contains the following averages, in this order:
     - The average of the total time to resolve a site.  This should include the time to resolve all steps in the hierarchy.  For example, for google.com, it should include the time to contact a root server to determine the top level domain server (com) location, and the time to contact the com TLD server to resolve google, and the time to contact the google name server to resolve google.com.
     - The average of the time for just the final request that resulted in the A (or CNAME) record.
-- `generate_time_cdfs(json_filename, output_filename)`: This function should accept `json_filename`, the name of a json file with output as specified above as input.  It should generate a graph with a CDF of the distribution of each of the values described in the previous function (the total time to resolve a site and the time to resolve just the final request) and save it to `output_filename`.  It should not return anything.
-- `count_different_dns_responses(filename1, filename2)`: This function should take the name of two files that each contain json dig output.  The idea of this function is to count the number of changes that occur between the two sets of dig runs in the two different filenames.  The function should return a list of two values.
 
-    The first value should be the number of names that had a different answer just within the traced queries in `filename1`.  Since you'll have 5 iterations of each query, it's possible you'll have queries that returned different answers -- for example, in one of our trial runs, the first 4 dig calls to `google.co.kr` returned 172.217.5.99, and the last call returned 216.58.219.67.  In this case, `google.co.kr` is counted as one entry that changed within the first trial.
+  As with `get_average_ttls`, these averages should be over all DNS queries in the given filename (not just the DNS queries for a particular hostname).
+- `generate_time_cdfs(json_filename, output_filename)`: This function should accept `json_filename`, the name of a json file with output as specified above as input.  It should generate a graph with two lines: one showing the CDF of the total time to resolve a site, an one showing the CDF of the time to resolve just the final request (these are the same two distributions that `get_average_times` returned the average of). The CDF should be saved to `output_filename`.  It should not return anything.
+- `count_different_dns_responses(filename1, filename2)`: This function should take the name of two files that each contain json dig output.  The idea of this function is to count the number of names that have changes in their __terminating entries__ (A or CNAME records for the hostname) in the two sets of dig runs in the two different filenames.  The function should return a list of two values.
+
+    The first value should be the number of names that had a different answer just within the traced queries in `filename1`.  Since you'll have 5 iterations of each query, it's possible you'll have queries that returned different answers -- for example, in one of our trial runs, the first 4 dig calls to `google.co.kr` returned 172.217.5.99, and the last call returned 216.58.219.67.  In this case, `google.co.kr` is counted as one entry that changed within the first trial.  If `google.co.kr` had returned more than two different answers in a particular trial run (e.g., if the three calls returned 172.217.5.99, the fourth call returned 1.2.3.4, and the fifth call returned 216.58.219.67), this still counts as just one change, because you should be counting the number of *names* that had multiple different answers.  If one of the dig calls fails, that's not considered a change (you can ignore any failed dig calls for this function).
 
     The second value should be the number of names that had a different answer if you inclue the data in `filename1` *and* the data in `filename2`.  This value should be greater than or equal to the previous value (because it includes all of the previous cases).
+    
+    This function should only look at differences in the terminating A or CNAME entries.  For example, if the IP address of one the DNS servers for www.google.com changes across the two files, that should not be counted as a change (this is because your json data from querying a specific server will often only have the terminating entries, so it won't be possible to look at other changes, e.g., of the authoritative name server for the website).
 
     One complexity to consider here is that queries often return a set of answers. For example, one query to `www.scottshenker.com` might return `1.2.3.4` and `5.6.7.8`, and a later query might return `5.6.7.8` and `9.10.11.12`.  You should consider two query answers to be different if the sets of answers are different.  So for example, if one query returns two answers `1.2.3.4` and `5.6.7.8`, and the next query returns the same two answers (even in different order): `5.6.7.8` and `1.2.3.4` these are considered the same.  If a 3rd query returned a different set: `1.2.3.4` and `5.6.7.8` and `9.10.11.12`, then this you should consider this different. The reason for this behavior is you're trying to get a sense of what time to live value is necessary -- in other words, how often do DNS servers change their minds about the answer to give to clients?
 
@@ -365,5 +371,5 @@ We recommend using matplotlib to generate plots.  Suppose you have list x_values
 
      from matplotlib.backends import backend_pdf
      my_filepath = “dns_plot.pdf”
-     with backendpdf.PdfPages(my_filepath) as pdf:
+     with backend_pdf.PdfPages(my_filepath) as pdf:
           pdf.savefig()
